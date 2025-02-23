@@ -6,7 +6,7 @@ import { title } from 'process';
 import Image from "next/image";
 import ParticleHolder from '../components/particleBg';
 import { getRandom } from '@tsparticles/engine';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,PieChart } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,PieChart, Pie,Cell } from 'recharts';
 import NextNProgress from 'nextjs-progressbar';
 import ProgressBar from '../components/ProgressBar';
 
@@ -47,6 +47,263 @@ const data = [
     "Final Product": 4300
   }
 ]
+
+const pie_chart_data = [
+  { name: "Galvanised square steel", Earning: 23543.54},
+  { name: "Iron Ores", Earning: 34543.54},
+  { name: "Aluminium Frame", Earning: 54543.54},
+  { name: "Platinum", Earning: 3543.54},
+  { name: "Copper Sheets", Earning: 2068.50}
+]
+
+const product_list = [
+  {
+    "Item Name": "Stainless Steel Rod",
+    "Price": "$120.45",
+    "Stock": 42,
+    "Weight": "2.5kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Copper Wire Roll",
+    "Price": "$75.30",
+    "Stock": 85,
+    "Weight": "1.2kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Aluminium Sheet",
+    "Price": "$45.99",
+    "Stock": 60,
+    "Weight": "3.0kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Brass Pipe",
+    "Price": "$89.20",
+    "Stock": 34,
+    "Weight": "4.5kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Titanium Bar",
+    "Price": "$320.80",
+    "Stock": 15,
+    "Weight": "1.8kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Carbon Steel Plate",
+    "Price": "$150.55",
+    "Stock": 22,
+    "Weight": "6.5kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Nickel Alloy Coil",
+    "Price": "$275.60",
+    "Stock": 19,
+    "Weight": "5.0kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Galvanized Iron Sheet",
+    "Price": "$95.40",
+    "Stock": 50,
+    "Weight": "2.8kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Bronze Cast Plate",
+    "Price": "$180.30",
+    "Stock": 26,
+    "Weight": "3.2kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Lead Ingot",
+    "Price": "$215.90",
+    "Stock": 30,
+    "Weight": "7.8kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Silver Flakes",
+    "Price": "$540.75",
+    "Stock": 10,
+    "Weight": "500g",
+    "Type": "Precious Metal"
+  },
+  {
+    "Item Name": "Gold Plated Strip",
+    "Price": "$925.60",
+    "Stock": 5,
+    "Weight": "400g",
+    "Type": "Precious Metal"
+  },
+  {
+    "Item Name": "Platinum Rod",
+    "Price": "$1120.90",
+    "Stock": 7,
+    "Weight": "600g",
+    "Type": "Precious Metal"
+  },
+  {
+    "Item Name": "Palladium Bar",
+    "Price": "$1350.45",
+    "Stock": 4,
+    "Weight": "550g",
+    "Type": "Precious Metal"
+  },
+  {
+    "Item Name": "Zinc Sheet",
+    "Price": "$40.25",
+    "Stock": 70,
+    "Weight": "1.5kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Magnesium Alloy",
+    "Price": "$99.60",
+    "Stock": 45,
+    "Weight": "3.4kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Silicon Carbide Brick",
+    "Price": "$38.40",
+    "Stock": 80,
+    "Weight": "2.2kg",
+    "Type": "Industrial Material"
+  },
+  {
+    "Item Name": "Tungsten Carbide Plate",
+    "Price": "$289.75",
+    "Stock": 14,
+    "Weight": "5.6kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Graphite Electrode",
+    "Price": "$145.90",
+    "Stock": 28,
+    "Weight": "4.2kg",
+    "Type": "Industrial Material"
+  },
+  {
+    "Item Name": "Beryllium Copper Sheet",
+    "Price": "$195.80",
+    "Stock": 20,
+    "Weight": "3.8kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Cobalt Alloy Bar",
+    "Price": "$310.55",
+    "Stock": 12,
+    "Weight": "2.9kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Lithium Battery Plate",
+    "Price": "$120.75",
+    "Stock": 35,
+    "Weight": "1.7kg",
+    "Type": "Industrial Material"
+  },
+  {
+    "Item Name": "Rare Earth Oxide",
+    "Price": "$530.30",
+    "Stock": 9,
+    "Weight": "600g",
+    "Type": "Rare Material"
+  },
+  {
+    "Item Name": "Molybdenum Sheet",
+    "Price": "$245.60",
+    "Stock": 17,
+    "Weight": "4.0kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Silicon Steel Coil",
+    "Price": "$85.90",
+    "Stock": 55,
+    "Weight": "2.1kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "High Strength Steel",
+    "Price": "$205.70",
+    "Stock": 24,
+    "Weight": "6.2kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Superalloy Sheet",
+    "Price": "$395.90",
+    "Stock": 11,
+    "Weight": "3.5kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Wrought Iron Rail",
+    "Price": "$130.20",
+    "Stock": 40,
+    "Weight": "8.4kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Insulated Copper Wire",
+    "Price": "$65.40",
+    "Stock": 90,
+    "Weight": "1.0kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Heavy Duty Titanium",
+    "Price": "$515.80",
+    "Stock": 13,
+    "Weight": "2.3kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Pewter Alloy Sheet",
+    "Price": "$135.25",
+    "Stock": 48,
+    "Weight": "4.1kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Neodymium Magnet",
+    "Price": "$260.90",
+    "Stock": 18,
+    "Weight": "500g",
+    "Type": "Rare Material"
+  },
+  {
+    "Item Name": "Zirconium Tube",
+    "Price": "$280.65",
+    "Stock": 16,
+    "Weight": "3.6kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Seamless Aluminium Pipe",
+    "Price": "$78.90",
+    "Stock": 58,
+    "Weight": "2.7kg",
+    "Type": "Metal"
+  },
+  {
+    "Item Name": "Cast Iron Cylinder",
+    "Price": "$165.40",
+    "Stock": 32,
+    "Weight": "7.0kg",
+    "Type": "Metal"
+  }
+]
+
 
 const prod = [
   {
@@ -109,10 +366,16 @@ for(var i=0;i<6;i++){
   }
 }
 
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+
 const Employee = () => {
   const [nav_index,nav_SetIndex] = useState(0);
   console.log(nav_index);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const nav_elements = ["DASHBOARD","PRODUCTS","ORDERS","CUSTOMERS","STATISTICS"] 
+  const onPieEnter = (_: unknown, index: number): void => {
+    setActiveIndex(index);
+  };
   return (
     <>
     <ParticleHolder/>
@@ -193,13 +456,13 @@ const Employee = () => {
           </div>)}
         </div>
         <div className='bg-[#ffffff]/10 w-[500px] backdrop-blur-md h-[115px] rounded-3xl m-3 justify-center items-center'>
-        <h1 className="text-xl font-bold m-4 p-4">Progress Bar</h1>
+        <h1 className="text-xl font-bold m-4 p-4 font-content">Target reached - 30%</h1>
         <ProgressBar/>
         </div>
         </div>
       </div>
       </div>
-      <div id="PRODUCTS">
+      <div id="PRODUCTS" className='flex flex-row'>
       <div className={`${font_title.variable} ${body_font.variable} bg-[#ffffff]/10 w-[1548px] backdrop-blur-md h-[515px] rounded-3xl ml-[70px] mb-[70px] justify-center items-center`}>
         <p className="font-title mt-1 p-10 text-white text-2xl">Top Selling Products</p>
         <div className="w-[90%] bg-black/10 rounded-lg h-[300px] overflow-y-auto p-4">
@@ -227,6 +490,51 @@ const Employee = () => {
   </table>
 </div>
       </div>
+      <div className={`${font_title.variable} ${body_font.variable} bg-[#ffffff]/10 w-[500px] backdrop-blur-md h-[515px] rounded-3xl ml-[30px] mb-[70px] justify-center items-center`}>
+      <p className="font-title pt-7 pl-7 text-white text-2xl">Gross Product Chart</p>
+      <div>
+      <PieChart width={450} height={450} className='justify-center items-center'>
+      <Pie
+                activeIndex={activeIndex}
+                data={pie_chart_data}
+                dataKey="Earning"
+                outerRadius={130}
+                fill="green"
+                onMouseEnter={onPieEnter}
+                style={{ cursor: 'pointer', outline: 'none' }}
+            >
+                {pie_chart_data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+            </Pie>
+            <Tooltip />
+      </PieChart>
+      </div>
+      </div>
+      </div>
+      <div id="PRODUCT" className={`w-[95%] ${font_title.variable} ${body_font.variable}'`}>
+      <table className={`w-[90%] m-10 border-collapse rounded-lg backdrop-blur-md bg-[#ffffff]/10`}>
+    <thead>
+      <tr className="font-title text-xl text-white border-b-2 border-white/30">
+        <th className="p-4 text-center">ITEM NAME</th>
+        <th className="p-4 text-center">PRICE</th>
+        <th className="p-4 text-center">STOCK</th>
+        <th className="p-4 text-center">VOLUME</th>
+        <th className="p-4 text-center">TYPE</th>
+      </tr>
+    </thead>
+    <tbody>
+      {product_list.map((value, index) => (
+        <tr key={index} className="font-title text-base text-white border-b border-white/20">
+          <td className="p-4 text-right">{value["Item Name"]}</td>
+          <td className="p-4 text-right">{value["Price"]}</td>
+          <td className="p-4 text-right">{value["Stock"]}</td>
+          <td className="p-4 text-right">{value["Weight"]}</td>
+          <td className="p-4 text-right">{value["Type"]}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
       </div>
     </>
   )

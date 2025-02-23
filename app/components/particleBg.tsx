@@ -14,7 +14,6 @@ import { loadSlim } from "@tsparticles/slim"; // if you are going to use `loadSl
 
 <style>
     #tsparticles{
-        
     }
 </style>
 
@@ -44,6 +43,10 @@ const ParticleHolder = () => {
   const options: ISourceOptions = useMemo(
     () => ({
       background: {
+        fullScreen: 
+        {
+            zIndex: -10,
+        },
         color: {
           value: "black",
         },

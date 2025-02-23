@@ -1,12 +1,10 @@
 'use client'
 
 import React from "react";
-import { Oswald, Kanit } from "next/font/google";
-import { Lexend } from "next/font/google";
+import { Rubik, Kanit } from "next/font/google";
 import ParticleHolder from "./components/particleBg";
 import Image from "next/image";
 import { CardBody, CardContainer, CardItem} from "@/components/ui/3d-card";
-import Link from "next/link";
 
 const title = Kanit({
   subsets: ["latin"],
@@ -15,7 +13,7 @@ const title = Kanit({
   display: "swap",
 });
 
-const body_font = Oswald({
+const body_font = Rubik({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-content",

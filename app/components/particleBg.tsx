@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useMemo, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import {
@@ -13,8 +14,8 @@ import { loadSlim } from "@tsparticles/slim"; // if you are going to use `loadSl
 // import { loadBasic } from "@tsparticles/basic"; // if you are going to use `loadBasic`, install the "@tsparticles/basic" package too.
 
 <style>
-    #tsparticles{
-    }
+  #tsparticles{
+  }
 </style>
 
 
@@ -43,9 +44,9 @@ const ParticleHolder = () => {
   const options: ISourceOptions = useMemo(
     () => ({
       background: {
-        fullScreen: 
+        fullScreen:
         {
-            zIndex: -10,
+          zIndex: -10,
         },
         color: {
           value: "black",
@@ -117,13 +118,13 @@ const ParticleHolder = () => {
 
   if (init) {
     return (
-        <>
-        
-      <Particles
-        id="tsparticles"
-        particlesLoaded={particlesLoaded}
-        options={options}/>
-        </>
+      <>
+
+        <Particles
+          id="tsparticles"
+          particlesLoaded={particlesLoaded}
+          options={options} />
+      </>
     );
   }
 

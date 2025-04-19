@@ -1,4 +1,4 @@
-// Import the functions you need from the SDKs you need
+'use client';
 import { unsubscribe } from "diagnostics_channel";
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
@@ -34,7 +34,7 @@ const initializeUser = (username: string, mail: string, password: string) => {
     set(ref(database, `Users/${mail.replaceAll(".", ",")}`), {
       "username": { username },
       "role": "customer",
-      "orders": [""],
+      "orders": [{ "Item Name": "NIL", "Price": 0, "Qty": 0 }],
       "history": [""],
       "cart": [""]
     })
@@ -46,7 +46,7 @@ const initializeUser = (username: string, mail: string, password: string) => {
   }
 }
 
-const getData = (mail: string, passwd: string) => {
+const getData = (mail: string) => {
   const endpoint = ref(database, `Users/${mail.replaceAll(".", ",")}`)
   onValue(
     endpoint, (value) => {
@@ -76,6 +76,95 @@ const getGraphData = async () => {
   }
 }
 
+const getOrderUser = async (email: string) => {
+  email = email.replaceAll(".", ",")
+  const endpoint = ref(database, `Users/${email}/orders`);
+  const snapshot = await get(endpoint);
+  if (snapshot.exists()) {
+    return snapshot.val()
+  } else {
+    return null;
+  }
+}
+
+const placeOrder = async (email: string, ItemName: string, qty: number) => {
+  const endpoint = ref(database);
+  const snapshot = await get(endpoint);
+  if (!snapshot.exists()) return;
+  const data = snapshot.val();
+  const userKey = email.replaceAll(".", ",");
+  let price = 0;
+  const itemIndex = data["Items"].findIndex((item) => item["Item Name"] == ItemName);
+  if (itemIndex === -1) {
+    console.log("Item not found");
+    return;
+  }
+  const item = data["Items"][itemIndex];
+  if (item["Stock"] < qty) {
+    console.log("Low on stock");
+    return;
+  }
+  price = item["Price"];
+  item["Stock"] -= qty;
+  const order = {
+    "Item Name": item["Item Name"],
+    "Price": item["Price"] * qty,
+    "Qty": qty
+  };
+  if (!data["Users"][userKey]["orders"]) {
+    data["Users"][userKey]["orders"] = [];
+  }
+  data["Users"][userKey]["orders"].push(order);
+  var order_global = data["Sales"]["orders"];
+  order_global["amount"] += item["Price"] * qty;
+  order_global["order_list"].push({
+    "Item Name": item["Item Name"],
+    "Price": item["Price"] * qty,
+    "Qty": qty,
+    "User": email.replaceAll(".", ",")
+  });
+
+  const earningEntry = data["Earning"].find((entry) => entry["Item Name"] == ItemName);
+  if (earningEntry) {
+    earningEntry["Earnings"] += qty * price;
+  }
+  await set(endpoint, data);
+};
+
+const removeOrder = async (email: string, index: number, global_item: Map<string, any>) => {
+  const endpoint = ref(database);
+  const snapshot = await get(endpoint);
+  if (snapshot.exists()) {
+    var data = snapshot.val()
+    var order_endpoint = data["Sales"]["orders"]
+    order_endpoint["amount"] -= global_item["Price"];
+    var l_1 = [];
+    for (var i = 0; i < order_endpoint["order_list"].length; i++) {
+      console.log("fk no", JSON.stringify(order_endpoint["order_list"][i]), JSON.stringify(global_item), JSON.stringify(order_endpoint["order_list"][i]) == JSON.stringify(global_item));
+      if (JSON.stringify(order_endpoint["order_list"][i]) == JSON.stringify(global_item)) {
+        console.log("bohahahah", JSON.stringify(order_endpoint["order_list"][i]));
+        continue;
+      }
+      l_1.push(order_endpoint["order_list"][i])
+    }
+    console.log(l_1);
+    order_endpoint["order_list"] = l_1
+    var earning_endpoint = data["Earning"]
+    for (var i = 0; i < earning_endpoint.length; i++) {
+      if (earning_endpoint[i]["Item Name"] == global_item["Item Name"]) {
+        earning_endpoint[i]["Earnings"] -= parseInt(global_item["Price"].toString())
+      }
+    }
+    var user_endpoint = data["Users"][email.replaceAll(".", ",")]["orders"]
+    user_endpoint = user_endpoint.slice(0, index).concat(user_endpoint.slice(index + 1, user_endpoint.length))
+    data["Users"][email.replaceAll(".", ",")]["orders"] = user_endpoint
+    console.log("endpoint", user_endpoint)
+    await set(endpoint, data)
+    console.log("Removed");
+  } else {
+    console.log("Doesnt work lol")
+  }
+}
 
 const getSalesData = async () => {
   const endpoint = ref(database, "Sales")
@@ -108,11 +197,10 @@ const getEarningData = async () => {
 const userSignIn = (mail: string, passwd: string) => {
   const auth = getAuth()
   signInWithEmailAndPassword(auth, mail, passwd).then((creds) => {
-    const user = creds.user;
-    console.log(user);
-
+    return 1;
   }).catch((e) => {
-    alert(e.message)
+    console.log(e.message)
+    return 0;
   })
 }
 
@@ -145,5 +233,21 @@ const salesChange = () => {
   });
 }
 
+const getUsers = async () => {
+  const endpoint = ref(database, "Users")
+  const snapshot = await get(endpoint)
+  if (snapshot.exists()) {
+    return snapshot.val()
+  }
+}
 
-export { database, initializeUser, getData, userSignIn, salesChange, getItemData, getGraphData, getSalesData, getEarningData }
+const getOrderEmp = async () => {
+  const endpoint = ref(database, "Sales/orders/order_list")
+  const snapshot = await get(endpoint);
+  if (snapshot.exists()) {
+    return snapshot.val()
+  }
+}
+
+
+export { database, getUsers, getOrderEmp, getOrderUser, placeOrder, initializeUser, getData, userSignIn, salesChange, getItemData, getGraphData, removeOrder, getSalesData, getEarningData }

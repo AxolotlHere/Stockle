@@ -9,7 +9,7 @@ import { getRandom } from '@tsparticles/engine';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import NextNProgress from 'nextjs-progressbar';
 import ProgressBar from '../components/ProgressBar';
-import { salesChange, getItemData, getGraphData, getSalesData, getEarningData } from "../backend/firebase_"
+import { salesChange, getItemData, getGraphData, getSalesData, getEarningData, getOrderEmp, getUsers } from "../backend/firebase_"
 
 
 const font_title = Kanit({
@@ -44,9 +44,11 @@ const Employee = () => {
   const [graphData_, setGraphData] = useState([{ "Raw": 0, "final_pdt": 0 }])
   const [activeIndex, setActiveIndex] = useState(-1);
   const [salesSum, setSalesSum] = useState(0);
+  const [orderList, setOrderList] = useState<any[]>([]);
   const [salesData_, setSalesData] = useState();
   const [earning, setEarning] = useState([]);
-  const nav_elements = ["DASHBOARD", "PRODUCTS", "ORDERS", "CUSTOMERS", "STATISTICS"]
+  const [usrData, setUserData] = useState<Map<string, any>>(new Map<string, any>())
+  const nav_elements = ["DASHBOARD", "PRODUCTS", "ORDERS", "CUSTOMERS"]
   const onPieEnter = (_: unknown, index: number): void => {
     setActiveIndex(index);
   };
@@ -57,13 +59,25 @@ const Employee = () => {
       console.log("huh", onValue)
     })
   }
-
+  const order_ = async () => {
+    await getOrderEmp().then((onValue) => {
+      setOrderList(onValue)
+    })
+  }
   const data = async () => {
     await getItemData().then((onValue) => {
       setItemList(onValue)
       console.log("Worksss", onValue)
     })
   }
+
+  const users_ = async () => {
+    await getUsers().then((onValue) => {
+      console.log("it is", onValue)
+      setUserData(onValue)
+    })
+  }
+
   const data_graph = async () => {
     await getGraphData().then((onValue) => {
       var Change_val = [];
@@ -93,6 +107,8 @@ const Employee = () => {
     data_graph();
     sales_data();
     earn_();
+    order_();
+    users_();
   }, []);
 
   return (
@@ -232,31 +248,90 @@ const Employee = () => {
           </div>
         </div>
       </div>
-      <div id="PRODUCT" className={`w-[100%] ml-[30px] ${font_title.variable} ${body_font.variable}'`}>
-        <table className={`w-[95%] m-10 border-collapse rounded-lg backdrop-blur-md bg-[#ffffff]/10`}>
-          <thead>
-            <tr className="font-title text-xl text-white border-b-2 border-white/30">
-              <th className="p-4 text-center">ITEM NAME</th>
-              <th className="p-4 text-center">PRICE</th>
-              <th className="p-4 text-center">STOCK</th>
-              <th className="p-4 text-center">VOLUME</th>
-              <th className="p-4 text-center">TYPE</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              itemList.map((value, index) => (
-                <tr key={index} className="font-title text-base text-white border-b border-white/20">
-                  <td className="p-4 text-right">{value["Item Name"]}</td>
-                  <td className="p-4 text-right">{value["Price"]}</td>
-                  <td className="p-4 text-right">{value["Stock"]}</td>
-                  <td className="p-4 text-right">{value["Weight"]}</td>
-                  <td className="p-4 text-right">{value["Type"]}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-        <button>ENTER ME</button>
+      <div className={`${font_title.variable} ${body_font.variable} backdrop-blur-md min-h-[...] rounded-3xl ml-[30px] mr-[30px] justify-center items-center`}>
+        <p className="text-3xl text-white font-title text-center p-10">PRODUCTS</p>
+        <div className="w-[100%] rounded-3xl h-[900px] overflow-y-auto p-4 bg-[#1c1c1c]/40">
+          <table className="w-full border-collapse rounded-xl">
+            <thead>
+              <tr className="font-title text-xl text-white border-b-2 border-white/30">
+                <th className="p-4 text-center">ID</th>
+                <th className="p-4 text-center">Item Name</th>
+                <th className="p-4 text-center">Price</th>
+                <th className="p-4 text-center">Stock</th>
+                <th className="p-4 text-center">Type</th>
+                <th className="p-4 text-center">Weight</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                itemList.map((value, index) => (
+                  <tr key={index} className="font-content text-base text-white border-b border-white/20">
+                    <td className="p-4 text-right">{index + 1}</td>
+                    <td className="p-4 text-right">{value["Item Name"]}</td>
+                    <td className="p-4 text-right">{value["Price"]}</td>
+                    <td className="p-4 text-right">{value["Stock"]}</td>
+                    <td className="p-4 text-right">{value["Type"]}</td>
+                    <td className="p-4 text-right">{value["Weight"]}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className={`${font_title.variable} ${body_font.variable} backdrop-blur-md min-h-[...] rounded-3xl ml-[30px] mr-[30px] justify-center items-center`}>
+        <p className="text-3xl text-white font-title text-center p-10">ORDERS</p>
+        <div className="w-[100%] rounded-3xl h-[450px] overflow-y-auto p-4 bg-[#1c1c1c]/40">
+          <table className="w-full border-collapse rounded-xl">
+            <thead>
+              <tr className="font-title text-xl text-white border-b-2 border-white/30">
+                <th className="p-4 text-center">ID</th>
+                <th className="p-4 text-center">Item Name</th>
+                <th className="p-4 text-center">Username</th>
+                <th className="p-4 text-center">Price</th>
+                <th className="p-4 text-center">Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                orderList.map((value, index) => (
+                  !value["Item Name"].toString().includes("NIL") ? <tr key={index} className="font-content text-base text-white border-b border-white/20">
+                    <td className="p-4 text-right">{index}</td>
+                    <td className="p-4 text-right">{value["Item Name"]}</td>
+                    <td className="p-4 text-right">{value["User"]}</td>
+                    <td className="p-4 text-right">{value["Price"]}</td>
+                    <td className="p-4 text-right">{value["Qty"]}</td>
+                  </tr> : null
+                ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className={`${font_title.variable} ${body_font.variable} backdrop-blur-md min-h-[...] rounded-3xl ml-[30px] mr-[30px] justify-center items-center`}>
+        <p className="text-3xl text-white font-title text-center p-10">USERS</p>
+        <div className="w-[100%] rounded-3xl h-[450px] overflow-y-auto p-4 bg-[#1c1c1c]/40">
+          <table className="w-full border-collapse rounded-xl">
+            <thead>
+              <tr className="font-title text-xl text-white border-b-2 border-white/30">
+                <th className="p-4 text-white text-center">ID</th>
+                <th className="p-4 text-center">EMAIL</th>
+                <th className="p-4 text-center">USERNAME</th>
+                <th className="p-4 text-center">ORDERS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                Object.keys(usrData).map((value, index) => {
+                  return (!value.includes("vitstudent") ? <tr key={value} className="font-content text-base text-white border-b border-white/20">
+                    <td className="p-4 text-center">{index + 1}</td>
+                    <td className="p-4 text-center">{value.toString().replaceAll(",", ".")}</td>
+                    <td className="p-4 text-center">{usrData[value]["username"]}</td>
+                    <td className="p-4 text-center">{usrData[value]["orders"].map((value, index) => value["Item Name"] != "NIL" ? (<p className=" p-1 text-center" key={index}>{`${value["Item Name"]} x ${value["Qty"]}`}</p>) : null)}</td>
+                  </tr> : null)
+                })
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   )

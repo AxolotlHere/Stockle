@@ -7,6 +7,8 @@ import { initializeApp } from "firebase/app";
 import { Kanit, Rubik } from "next/font/google";
 import { useState, useMemo } from "react";
 import { initializeUser, getData, userSignIn } from "../backend/firebase_"
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const font_title = Kanit({
     weight: "400",
@@ -24,6 +26,7 @@ const body_font = Rubik({
 
 const login = () => {
     const particles = useMemo(() => <ParticleHolder />, [])
+    const router = useRouter();
     const [email, setEmail] = useState("")
     const [passwd, setPasswd] = useState("")
     return (
@@ -55,9 +58,12 @@ const login = () => {
                     <div className="w-[100%] flex flex-row justify-center items-center">
                         <button className="rounded-lg bg-[#1c1c1c] text-white font-content pr-5 pl-5 pt-1 border-white border-2 pb-1 m-4 hover:bg-black" onClick={
                             () => {
-                                console.log("Hello")
-                                userSignIn(email, passwd);
-                                getData(email, passwd);
+                                const user = userSignIn(email, passwd);
+                                const destination = email.includes('vitstudent')
+                                    ? '/employee'
+                                    : '/customer';
+                                console.log("Enters");
+                                router.push(`${destination}?email=${encodeURIComponent(email)}`);
                             }
                         }>
                             Sign in

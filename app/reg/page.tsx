@@ -65,7 +65,7 @@ const reg = () => {
               () => {
                 console.log("Hello")
                 initializeUser(usrname, email, passwd);
-                getData(email, passwd);
+                getData(email);
               }
             }>
               SIGN UP

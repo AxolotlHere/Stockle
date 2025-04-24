@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, Suspense } from 'react'
 import ParticleHolder from '../components/particleBg';
 import Image from "next/image";
 import { Kanit, Rubik } from "next/font/google";
@@ -22,6 +22,16 @@ const body_font = Rubik({
 });
 
 const Customer = () => {
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Cust/>
+    </Suspense>
+  )
+}
+
+
+const Cust = () => {
   const [itemData, setItemData] = useState<any[]>([])
   const [orderData, setOrderData] = useState<any[]>([])
   const [search_, setSearch] = useState("");
@@ -187,5 +197,6 @@ myMap.set("User", email ? email.replaceAll(".", ",") : "");
     </>
   )
 }
+
 
 export default Customer

@@ -163,12 +163,12 @@ const Customer = () => {
                         value="-"
                         type="button"
                         onClick={() => {
-                          removeOrder(email ?? "", index, {
-                            "Item Name": value["Item Name"],
-                            "Price": value["Price"],
-                            "Qty": value["Qty"],
-                            "User": email ? email.replaceAll(".", ",") : "",
-                          }).then(
+                          const myMap = new Map<string, any>();
+myMap.set("Item Name", value["Item Name"]);
+myMap.set("Price", value["Price"]);
+myMap.set("Qty", value["Qty"]);
+myMap.set("User", email ? email.replaceAll(".", ",") : "");
+                          removeOrder(email ?? "", index, myMap).then(
                             (e) => {
                               alert("Removed successfully");
                               item_(); order_();

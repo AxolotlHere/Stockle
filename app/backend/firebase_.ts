@@ -32,7 +32,7 @@ const initializeUser = (username: string, mail: string, password: string) => {
   console.log("the value : ", !mail.split("@")[1].includes("vitstudent"))
   if (!mail.split("@")[1].includes("vitstudent")) {
     set(ref(database, `Users/${mail.replaceAll(".", ",")}`), {
-      "username": { username },
+      "username": username,
       "role": "customer",
       "orders": [{ "Item Name": "NIL", "Price": 0, "Qty": 0 }],
       "history": [""],

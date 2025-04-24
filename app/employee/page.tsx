@@ -324,8 +324,8 @@ const Employee = () => {
                   return (!value.includes("vitstudent") ? <tr key={value} className="font-content text-base text-white border-b border-white/20">
                     <td className="p-4 text-center">{index + 1}</td>
                     <td className="p-4 text-center">{value.toString().replaceAll(",", ".")}</td>
-                    <td className="p-4 text-center">{usrData[value]["username"]["username"]}</td>
-                    <td className="p-4 text-center">{usrData[value]["orders"].map((value, index) => value["Item Name"] != "NIL" ? (<p className=" p-1 text-center" key={index}>{`${value["Item Name"]} x ${value["Qty"]}`}</p>) : null)}</td>
+                    <td className="p-4 text-center">{usrData.get(value).get("username")}</td>
+                    <td className="p-4 text-center">{usrData.get(value).get("orders").map((value:Map<string,any>, index:number) => value.get("Item Name") != "NIL" ? (<p className=" p-1 text-center" key={index}>{`${value.get("Item Name")} x ${value.get("Qty")}`}</p>) : null)}</td>
                   </tr> : null)
                 })
               }

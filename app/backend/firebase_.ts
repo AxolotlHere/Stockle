@@ -94,7 +94,7 @@ const placeOrder = async (email: string, ItemName: string, qty: number) => {
   const data = snapshot.val();
   const userKey = email.replaceAll(".", ",");
   let price = 0;
-  const itemIndex = data["Items"].findIndex((item) => item["Item Name"] == ItemName);
+  const itemIndex = data["Items"].findIndex((item) => item.get("Item Name") == ItemName);
   if (itemIndex === -1) {
     console.log("Item not found");
     return;

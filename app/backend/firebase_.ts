@@ -94,7 +94,7 @@ const placeOrder = async (email: string, ItemName: string, qty: number) => {
   const data = snapshot.val();
   const userKey = email.replaceAll(".", ",");
   let price = 0;
-  const itemIndex = data["Items"].findIndex((item) => item.get("Item Name") == ItemName);
+  const itemIndex = data["Items"].findIndex((item:Map<any,any>) => item.get("Item Name") == ItemName);
   if (itemIndex === -1) {
     console.log("Item not found");
     return;
@@ -124,7 +124,7 @@ const placeOrder = async (email: string, ItemName: string, qty: number) => {
     "User": email.replaceAll(".", ",")
   });
 
-  const earningEntry = data["Earning"].find((entry) => entry["Item Name"] == ItemName);
+  const earningEntry = data["Earning"].find((entry:Map<any,any>) => entry.get("Item Name") == ItemName);
   if (earningEntry) {
     earningEntry["Earnings"] += qty * price;
   }
@@ -137,7 +137,7 @@ const removeOrder = async (email: string, index: number, global_item: Map<string
   if (snapshot.exists()) {
     var data = snapshot.val()
     var order_endpoint = data["Sales"]["orders"]
-    order_endpoint["amount"] -= global_item["Price"];
+    order_endpoint["amount"] -= global_item.get("Price");
     var l_1 = [];
     for (var i = 0; i < order_endpoint["order_list"].length; i++) {
       console.log("fk no", JSON.stringify(order_endpoint["order_list"][i]), JSON.stringify(global_item), JSON.stringify(order_endpoint["order_list"][i]) == JSON.stringify(global_item));
@@ -151,8 +151,8 @@ const removeOrder = async (email: string, index: number, global_item: Map<string
     order_endpoint["order_list"] = l_1
     var earning_endpoint = data["Earning"]
     for (var i = 0; i < earning_endpoint.length; i++) {
-      if (earning_endpoint[i]["Item Name"] == global_item["Item Name"]) {
-        earning_endpoint[i]["Earnings"] -= parseInt(global_item["Price"].toString())
+      if (earning_endpoint[i]["Item Name"] == global_item.get("Item Name")) {
+        earning_endpoint[i]["Earnings"] -= parseInt(global_item.get("Price").toString())
       }
     }
     var user_endpoint = data["Users"][email.replaceAll(".", ",")]["orders"]
